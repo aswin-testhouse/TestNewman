@@ -1,23 +1,14 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Run Newman Tests
 
-# Controls when the workflow will run
 on:
-    # Triggers the workflow on push or pull request events but only for the "main" branch
     push:
         branches: ["master"]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-    # This workflow contains a single job called "new-man-tests"
     newman-tests:
-        # The type of runner that the job will run on
         runs-on: ubuntu-latest
 
-        # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@v4
 
             - name: Setup Node
@@ -29,8 +20,13 @@ jobs:
               run: npm install -g newman newman-reporter-htmlextra
 
             - name: Run API Tests
-              run: newman run postman/DummyApi.postman_collection.json \
-                  --reporter-htmlextra-export newman-report.html
+              run: |
+                  newman run postman/DummyApi.postman_collection.json \
+                    --reporters cli,htmlextra \
+                    --reporter-htmlextra-export newman-report.html
+
+            - name: Check generated files
+              run: ls -al
 
             - name: Upload HTML Report
               uses: actions/upload-artifact@v4
