@@ -32,9 +32,11 @@ jobs:
               run: newman run postman/DummyApi.postman_collection.json \
                   --reporters cli,htmlextra \
                   --reporter-htmlextra-export newman-report.html
+                  echo "🗂️ Listing files:"
+                  ls -al
 
             - name: Upload HTML Report
               uses: actions/upload-artifact@v4
               with:
                   name: newman-html-report
-                  path: newman-report.html
+                  path: ./newman-report.html
