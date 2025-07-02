@@ -23,14 +23,13 @@ jobs:
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
-                  node-version: 22.16.0
+                  node-version: 18
 
             - name: Install newman and html reporter
               run: npm install -g newman newman-reporter-htmlextra
 
             - name: Run API Tests
               run: newman run postman/DummyApi.postman_collection.json \
-                  --reporters cli,htmlextra \
                   --reporter-htmlextra-export newman-report.html
 
             - name: Upload HTML Report
