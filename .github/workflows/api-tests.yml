@@ -32,12 +32,12 @@ jobs:
 
             # Step 4: Run the API tests using Newman CLI
             # - Runs the exported Postman collection
-            # - Generates CLI output and HTML report
+            # - Generates CLI output and HTML report and save as newman-report.html
             - name: Run API Tests
               run: |
                   newman run postman/DummyApi.postman_collection.json \
-                    --reporters cli,htmlextra \  # Use both CLI and HTML reporters
-                    --reporter-htmlextra-export newman-report.html  # Save HTML report as 'newman-report.html'
+                    --reporters cli,htmlextra \  
+                    --reporter-htmlextra-export newman-report.html
 
             # Step 5: Upload the generated HTML report as an artifact
             # This allows downloading the report from GitHub Actions UI after the workflow finishes
