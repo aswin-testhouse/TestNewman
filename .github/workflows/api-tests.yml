@@ -1,35 +1,49 @@
-name: Run Newman Tests
+# This workflow runs Newman API tests automatically on GitHub Actions
 
+name: Run Newman Tests # Name shown in GitHub Actions UI
+
+# Controls when the workflow will run
 on:
+    # Triggers the workflow on push events only for the "master" branch
     push:
         branches: ["master"]
 
+# A workflow run is made up of one or more jobs
 jobs:
+    # This workflow contains a single job called "newman-tests"
     newman-tests:
+        # Defines the type of runner (virtual machine) to run the job
         runs-on: ubuntu-latest
 
+        # Steps represent a sequence of tasks in the job
         steps:
+            # Step 1: Check out (clone) the repo onto the GitHub runner
             - uses: actions/checkout@v4
 
+            # Step 2: Install Node.js environment (required for Newman)
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
-                  node-version: 18
+                  node-version: 18 # Using Node.js v18 (LTS version, stable)
 
+            # Step 3: Install Newman and the htmlextra reporter globally on the runner
             - name: Install newman and html reporter
               run: npm install -g newman newman-reporter-htmlextra
 
+            # Step 4: Run the API tests using Newman CLI
+            # - Runs the exported Postman collection
+            # - Generates CLI output and HTML report
             - name: Run API Tests
               run: |
                   newman run postman/DummyApi.postman_collection.json \
-                    --reporters cli,htmlextra \
-                    --reporter-htmlextra-export newman-report.html
+                    --reporters cli,htmlextra \  # Use both CLI and HTML reporters
+                    --reporter-htmlextra-export newman-report.html  # Save HTML report as 'newman-report.html'
 
-            - name: Check generated files
-              run: ls -al
-
+            # Step 5: Upload the generated HTML report as an artifact
+            # This allows downloading the report from GitHub Actions UI after the workflow finishes
             - name: Upload HTML Report
               uses: actions/upload-artifact@v4
               with:
-                  name: newman-html-report
-                  path: ./newman-report.html
+                  name: newman-html-report # Artifact name shown in GitHub UI
+                  path: ./newman-report.html # Path to the report file (must match above)
+
